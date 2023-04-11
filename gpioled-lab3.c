@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0+
-// SPDX-FileCopyrightText: 2022 Bossen WU <bossen.wu@st.com>
+// SPDX-FileCopyrightText: 2023 Bossen WU <bossen.wu@st.com>
 /*
  * gpiolab.c
  *
- *  Created on: Feb 24, 2022
+ *  Created on: Apr 7, 2023
  *      Author: Bossen Wu
  */
 
@@ -13,8 +13,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#define GPIOA   "/dev/gpiochip0"
-#define PA14    14
+#define GPIO_PORT	"/dev/gpiochip9"
+#define	GREEN_LED	14
 
 int main(void)
 {
@@ -23,12 +23,12 @@ int main(void)
 	unsigned int count = 0;
 	int i, value = 0, ret = 0;
 
-	gpiochip = gpiod_chip_open(GPIOA);
-	line = gpiod_chip_get_line(gpiochip, PA14);
+	gpiochip = gpiod_chip_open(GPIO_PORT);
+	line = gpiod_chip_get_line(gpiochip, GREEN_LED);
 	if (line == NULL)
 		goto EXIT_CHIP;
 
-	ret = gpiod_line_request_output(line, "gpiolab", 0);
+	ret = gpiod_line_request_output(line, "gpioapp", 0);
 	if (ret)
 	{
 		printf("gpiod_line_request_output failed \n");
@@ -49,10 +49,10 @@ int main(void)
 		sleep(1);
 	} while (count < 5);
 
-	EXIT_LINE:
+EXIT_LINE:
 	gpiod_line_release(line);
 
-	EXIT_CHIP:
+EXIT_CHIP:
 	gpiod_chip_close(gpiochip);
 
 	printf("gpiolab is completed \n");
